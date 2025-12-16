@@ -36,16 +36,15 @@ Open Jupyter notebooks for interactive exploration:
    - Normalization
    - Filtering
    - Formatting for downstream analysis
-2. Pseudotemporal Ordering (prob/pseudotime.py)
+2. Pseudotemporal Ordering (prob/progression.py)
     - Diffusion-based random walk
     - Compute progression pseudotime distances (PPD)
     - Evaluate correlation with Braak stage
-3. Gene Regulatory Network Inference (prob/network.py)
+3. Gene Regulatory Network Inference (prob/ode_bayesian_lasso.py)
     - ODE-based modeling
     - Bayesian Lasso regression for sparsity
     - Extract statistically significant regulatory interactions
 4. Analysis and Visualization (prob/utils.py + notebooks)
     - Plot trajectories, networks, and hub genes
     - Compare inferred networks to curated pathway databases
-
 
