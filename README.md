@@ -14,14 +14,50 @@ Key findings from this reimplementation:
 
 This repository contains all code, scripts, and processed data required to reproduce the analyses and figures in the study. All results in the report are reproducible using the provided pipeline
 
-# Usage
+# Usage Instructions
 ## Option 1: Run the pipeline via Python scripts
+This guide explains how to run the PROB pipeline for Alzheimer’s disease progression inference and gene regulatory network reconstruction. All steps assume you are starting from a fresh clone of the repository.
+1. Clone the repository 
+Open a terminal or PowerShell, navigate to your working folder, and clone the repo:
+
+   ```bash
+    git clone https://github.com/mbel24/PROB-reimplementation.git
+    cd PROB-reimplementation
+   
+2. Create and activate a virtual environment
+3. Install dependencies
+
+This installs all necessary Python packages
+
+    pip install -r requirements.txt
+
+4. Run the pipeline:
+
+The pipeline is run using the run_pipeline.py script located in the scripts/ folder:
+
     python scripts/run_pipeline.py
-This script executes the pipeline end-to-end:
-1. Load and preprocess data.
-2. Compute progression pseudotime (PPD) for all samples.
-3. Infer the gene regulatory network using Bayesian Lasso regression.
-4. Generate summary statistics and figures.
+
+This executes all steps:
+
+- Load and preprocess data.
+- Compute progression inference (PPD) for all samples.
+- Infer the gene regulatory network using Bayesian Lasso regression.
+- Generate summary statistics and figures.
+    
+5. View results
+
+All output is saved in the results/ folder (created automatically):
+
+- ppd_values.csv — pseudotemporal progression distances for each sample
+- grn_adjacency_matrix.csv — inferred regulatory network weights
+- grn_confidence_matrix.csv — confidence probabilities for edges
+- PNG plots:
+
+    - gene_regulatory_network.png — network visualization
+    - ppd_vs_stage.png — PPD distribution and clinical stage
+    - gene_expression_heatmap.png — gene expression along pseudotime
+    - adjacency_matrix_and_presence_probability.png — adjacency & confidence matrices
+
 
 ## Option 2: Explore the analysis via the notebooks
 Open Jupyter notebooks for interactive exploration:
