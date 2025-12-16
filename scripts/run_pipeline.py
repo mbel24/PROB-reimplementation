@@ -85,14 +85,13 @@ def main():
     print("\n================ PIPELINE COMPLETE ==================\n")
 
     analyze_and_plot_results(
-    genes_of_interest=gene_names,
-    AM=AM,
-    S=S,
-    Data_ordered=Data_ordered,
-    PPD=PPD,
-    prob_input_normalized=prob_input,
-    outdir="results",
-    confidence_threshold=0.75
+        genes_of_interest=gene_names,
+        AM=AM,
+        S=S,
+        Data_ordered=Data_ordered,
+        PPD=PPD,
+        prob_input_normalized=prob_input,
+        outdir="results"
     )
 if __name__ == "__main__":
     main()
