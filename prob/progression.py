@@ -1,3 +1,6 @@
+import numpy as np
+from scipy.spatial.distance import pdist, squareform
+
 def knnsearch(Q, R=None, K=1):
     if R is None:
         R = Q
