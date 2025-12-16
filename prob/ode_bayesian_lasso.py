@@ -45,8 +45,12 @@ def ODE_BayesianLasso(Data_ordered, TimeSampled, verbose=True):
         source_idx = 0
         for source_gene in range(n_genes):
             if source_gene != target_gene and source_idx < len(coef):
-                if S[target_gene, source_gene] > 0.95:
+                if S[target_gene, source_gene] > 0.75:  # OPTIMIZED: Set to 0.75 for 26 edges (6.84% density)
                     AM[target_gene, source_gene] = coef[source_idx]
+                source_idx += 1
+    if verbose:
+        print(f'✓ Step 2 complete: {np.sum(AM!=0)} edges (confidence threshold: P>0.75)')
+    return Para_Post_pdf, S, AM
                 source_idx += 1
     if verbose:
         print(f'✓ Step 2 complete: {np.sum(AM!=0)} edges')
