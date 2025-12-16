@@ -77,7 +77,7 @@ def select_genes(input_df, candidate_genes=None, top_n=20):
         raise KeyError(f"These rows are missing from the processed expression dataframe: {missing}")
     
     prob_input = input_df.loc[final_rows].to_numpy()   # shape: (n_genes+1, n_samples)
-    return prob_intup, genes_of_interest
+    return prob_input, genes_of_interest
 
 def filter_and_normalize(prob_input, stage_min=3):
     """Filter samples by Braak stage and normalize gene expression."""
