@@ -9,4 +9,4 @@ Modules:
 
 from .progression import Progression_Inference
 from .ode_bayesian_lasso import ODE_BayesianLasso
-from .preprocess import load_GSE48350, select_genes, filter_and_normalize
+from .preprocessing import load_GSE48350, select_genes, filter_and_normalize
