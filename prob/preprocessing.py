@@ -51,7 +51,7 @@ def load_GSE48350(dest_dir="./data"):
 def select_genes(input_df, candidate_genes=None, top_n=20):
     #SELECT GENES OF INTEREST & BUILD prob_input
     if candidate_genes is None:
-        alzheimers_genes_candidate = [
+        candidate_genes = [
             'APOE', 'APP', 'PSEN1', 'PSEN2', 'MAPT',  # Core AD genes
             'TREM2', 'TYROBP', 'SORL1', 'CD33', 'BIN1',  # GWAS hits
             'CLU', 'PICALM', 'ABCA7', 'EPHA1', 'MS4A6A',  # Risk factors
