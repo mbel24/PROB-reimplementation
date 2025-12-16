@@ -1,51 +1,55 @@
-# PROB-reimplementation
-This repository contains a reimplementation of PROB (Progression-Based Bayesian Method) applied to Alzheimer’s disease (AD) transcriptomic data. The pipeline infers latent disease progression and gene regulatory networks from cross-sectional data, enabling reproducible analyses of AD progression using human brain microarray datasets.
+# PROB Reimplementation for Alzheimer’s Disease
+This repository contains a reimplementation of PROB (Progression-Based Bayesian Method) applied to Alzheimer’s disease (AD) transcriptomic data. The pipeline infers latent disease progression and gene regulatory networks from cross-sectional data.
 
-# Backgroud
-Alzheimer’s disease (AD) is a progressive neurodegenerative disorder characterized by molecular and cellular changes that accumulate over time.
-PROB addresses this challenge by:
-1. Inferring a pseudotemporal ordering of samples (progression pseudotime distance, PPD) using a diffusion-based random walk framework.
-2. Inferring a directed gene regulatory network via ordinary differential equation models with Bayesian Lasso regression to enforce sparsity.
+## Backgroud
+Alzheimer’s disease (AD) is a progressive neurodegenerative disorder. PROB addresses this challenge by:
 
-Key findings from this reimplementation:
-- PPD strongly correlates with Braak stage (Spearman ρ = 0.93), demonstrating that transcriptomic data alone can reconstruct disease chronology.
-- Regulatory network analysis highlights microglial activation and lipid metabolism as central drivers.
-- Hub genes such as CLU and APOE influence immune-related genes like TREM2, TYROBP, CD33, consistent with known AD pathology.
+- Inferring pseudotemporal ordering of samples (PPD) using a diffusion-based random walk.
+- Inferring a directed gene regulatory network via ODE models with Bayesian Lasso regression.
 
-This repository contains all code, scripts, and processed data required to reproduce the analyses and figures in the study. All results in the report are reproducible using the provided pipeline
+**Key findings:**
 
-# Usage Instructions
-This guide explains how to run the PROB pipeline for Alzheimer’s disease progression inference and gene regulatory network reconstruction. All steps assume you are starting from a fresh clone of the repository.
+- PPD strongly correlates with Braak stage (Spearman ρ = 0.93).
+- Regulatory network analysis highlights microglial activation and lipid metabolism.
+- Hub genes such as CLU and APOE influence immune-related genes like TREM2, TYROBP, CD33.
+
+All code, scripts, and processed data required to reproduce the analyses and figures are included.
+
+## Usage Instructions
+
+All steps assume you are starting from a fresh clone of the repository.
+
 ### 1. Clone the repository 
 Open a terminal or PowerShell, navigate to your working folder, and clone the repo:
 
-   ```bash
+```bash
     git clone https://github.com/mbel24/PROB-reimplementation.git
     cd PROB-reimplementation
-   ```
+```
+
    
 ### 2. Create and activate a virtual environment
-(Windows example):
-   ```bash
+Windows:
+```powershell
    python -m venv venv
    .\venv\Scripts\activate
-   ```
+```
 Linux/max OS:
- ```bash
+```bash
    python3 -m venv venv
    source venv/bin/activate
-   ```
+```
 ### 3. Install dependencies
 
 This installs all necessary Python packages
 
-   `pip install -r requirements.txt`
+`pip install -r requirements.txt`
 
 ### 4. Run the pipeline:
 
 The pipeline is run using the `run_pipeline.py` script located in the `scripts/` folder:
 
-   `python scripts/run_pipeline.py`
+`python scripts/run_pipeline.py`
 
 This executes all steps:
 
