@@ -6,7 +6,10 @@ End-to-end PROB reimplementation pipeline:
 2. Infer disease progression pseudotime (PPD)
 3. Infer gene regulatory network using ODE + Bayesian Lasso
 """
+import sys
 import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'prob'))
+
 import numpy as np
 import pandas as pd
 
