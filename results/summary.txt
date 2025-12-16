@@ -1,0 +1,17 @@
+PROB ANALYSIS SUMMARY
+==================================================
+
+Total genes: 20
+Total edges: 26
+Network density: 0.068
+
+PPD vs Braak Stage:
+  Spearman r = 0.9258
+  p-value = 1.39e-29
+
+Top regulators (out-degree):
+  MS4A6A: 4
+  NOTCH3: 4
+  TREM2: 3
+  TYROBP: 3
+  BACE1: 3
