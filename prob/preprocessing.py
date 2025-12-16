@@ -69,7 +69,11 @@ def select_genes(input_df, candidate_genes=None, top_n=20):
         print(f"\nSelected top 20 genes by variance:")
     else:
         genes_of_interest = available_genes
-        
+
+    for i, gene in enumerate(genes_of_interest):
+        var = input_df.loc[gene].var()
+        print(f"  {i+1}. {gene} (variance: {var:.2f})")
+
     final_rows = genes_of_interest + ['braak stage']
     # Guard: ensure all selected rows exist
     missing = [r for r in final_rows if r not in input_df.index]
@@ -77,6 +81,8 @@ def select_genes(input_df, candidate_genes=None, top_n=20):
         raise KeyError(f"These rows are missing from the processed expression dataframe: {missing}")
     
     prob_input = input_df.loc[final_rows].to_numpy()   # shape: (n_genes+1, n_samples)
+    print(f"\nInitial PROB input matrix shape: {prob_input.shape} ({len(genes_of_interest)} genes x {prob_input.shape[1]} samples)")
+
     return prob_input, genes_of_interest
 
 def filter_and_normalize(prob_input, stage_min=3):
@@ -86,4 +92,11 @@ def filter_and_normalize(prob_input, stage_min=3):
 
     scaler = StandardScaler()
     prob_input[:-1, :] = scaler.fit_transform(prob_input[:-1, :].T).T  # don't scale stage row
+    print(f"\n✓ Expression data normalized (z-score)")
+    print(f"  Mean per gene: {np.mean(prob_input[:-1, :], axis=1)[:3]} ... (should be ~0)")
+    print(f"  Std per gene: {np.std(prob_input[:-1, :], axis=1)[:3]} ... (should be ~1)")
+    
+    print(f"\nFinal PROB input matrix shape: {prob_input.shape}")
+    print("="*60 + "\n")
+
     return prob_input
