@@ -1,0 +1,8 @@
+scipy
+pandas
+matplotlib
+networkx
+scikit-learn
+GEOparse
+anndata
+numcodecs
