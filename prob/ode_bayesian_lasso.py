@@ -51,7 +51,3 @@ def ODE_BayesianLasso(Data_ordered, TimeSampled, verbose=True):
     if verbose:
         print(f'✓ Step 2 complete: {np.sum(AM!=0)} edges (confidence threshold: P>0.75)')
     return Para_Post_pdf, S, AM
-                source_idx += 1
-    if verbose:
-        print(f'✓ Step 2 complete: {np.sum(AM!=0)} edges')
-    return Para_Post_pdf, S, AM
