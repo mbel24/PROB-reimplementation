@@ -16,8 +16,7 @@ Alzheimer’s disease (AD) is a progressive neurodegenerative disorder. PROB add
 All code, scripts, and processed data required to reproduce the analyses and figures are included.
 
 ## Usage Instructions
-
-All steps assume you are starting from a fresh clone of the repository.
+Steps to produce the results from the Alzheimer's dataset. All steps assume you are starting from a fresh clone of the repository, and it must be noted that all 
 
 ### 1. Clone the repository 
 Open a terminal or PowerShell, navigate to your working folder, and clone the repo:
@@ -93,6 +92,6 @@ All output is saved in the results/ folder (created automatically):
     - ODE-based modeling
     - Bayesian Lasso regression for sparsity
     - Extract statistically significant regulatory interactions
-4. Analysis and Visualization (prob/utils.py + notebooks)
+4. Analysis and Visualization (prob/analyze_and_plot_results.py + notebooks)
     - Plot trajectories, networks, and hub genes
 
