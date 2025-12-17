@@ -1,7 +1,7 @@
 # PROB Reimplementation for Alzheimer’s Disease
-This repository contains a reimplementation of PROB (Progression-Based Bayesian Method) applied to Alzheimer’s disease (AD) transcriptomic data. The pipeline infers latent disease progression and gene regulatory networks from cross-sectional data.
+This repository contains a reimplementation of PROB (Progression-Based Bayesian Method) applied to Alzheimer’s disease (AD) transcriptomic data. The pipeline infers latent disease progression and gene regulatory networks from cross-sectional data, enabling disease staging and mechanistic insight without longitudinal samples.
 
-## Backgroud
+## Background
 Alzheimer’s disease (AD) is a progressive neurodegenerative disorder. PROB addresses this challenge by:
 
 - Inferring pseudotemporal ordering of samples (PPD) using a diffusion-based random walk.
@@ -21,7 +21,7 @@ Steps to produce the results from the Alzheimer's dataset. All steps assume you 
 ### 1. Clone the repository 
 Open a terminal or PowerShell, navigate to your working folder, and clone the repo:
 
-```bash
+```Bash
     git clone https://github.com/mbel24/PROB-reimplementation.git
     cd PROB-reimplementation
 ```
@@ -29,12 +29,12 @@ Open a terminal or PowerShell, navigate to your working folder, and clone the re
    
 ### 2. Create and activate a virtual environment
 Windows:
-```powershell
+```Powershell
    python -m venv venv
    .\venv\Scripts\activate
 ```
-Linux/max OS:
-```bash
+Linux/maxOS:
+```Bash
    python3 -m venv venv
    source venv/bin/activate
 ```
@@ -48,7 +48,7 @@ This installs all necessary Python packages
 
 The pipeline is run using the `run_pipeline.py` script located in the `scripts/` folder:
 
-`python scripts/run_pipeline.py`
+`Python scripts/run_pipeline.py`
 
 This executes all steps:
 
@@ -73,13 +73,15 @@ All output is saved in the results/ folder (created automatically):
  
 
 ### 6. Notes for reproducibility
+- Random seeds are fixed where applicable.
+- All figures can be regenerated using either:
+  - `scripts/run_pipeline.py`, or
+  - the provided Jupyter notebooks 
+- Tested on:
+  - Windows 10 (that why the pipeline uses a non-interactive Matplotlib backend (`Agg`) to avoid Tcl/Tk errors)
+  - Python ≥ 3.9
 
-- As we run it on Windows, the pipeline uses a non-interactive Matplotlib backend (`Agg`) to avoid Tcl/Tk errors.
-- All scripts in `prob/` are self-contained.
-- The virtual environment ensures dependencies are isolated.
-- We also facilitated some jupyter notebooks for interactive exploration. The notebooks reproduce all figures (including the ones produced by the synthetic and original data), make sure you run the cells sequentially to ensure reproducibility and that you have downloaded all phyton files in `prob/` and the necesary data (`ExampleData`) which you can find in the `data/` folder
-
-# Pipeline Workflow
+## Pipeline Workflow and repository structure
 1. Data Loading and Preprocessing (prob/preprocessing.py)
    - Normalization
    - Filtering
@@ -94,4 +96,17 @@ All output is saved in the results/ folder (created automatically):
     - Extract statistically significant regulatory interactions
 4. Analysis and Visualization (prob/analyze_and_plot_results.py + notebooks)
     - Plot trajectories, networks, and hub genes
+
+## Other information
+This whole repository is a reimplementation of PROB, specifically the model pressented in the article _Inferring latent temporal progression and regulatory networks from cross-sectional transcriptomic data of cancer samples published_ by Sun et al. (2021)
+
+### Differences from Original PROB Implementation
+- Rewritten entirely in Python for improved accessibility.
+- Adapted to Alzheimer’s disease transcriptomic data.
+- Modular pipeline with automated data download.
+- Additional visualization and summary statistics.
+
+### References: 
+* Sun, X., Zhang, J., & Nie, Q. (2021). Inferring latent temporal progression and regulatory networks from cross-sectional transcriptomic data of cancer samples. PLoS Computational Biology, 17(3), e1008379. https://doi.org/10.1371/journal.pcbi.1008379
+* SunXQlab. (n.d.). GitHub - SunXQlab/PROB: pseudotemporal progression-based Bayesian method for inferring GRNs from cross-sectional clinical transcriptomic data. GitHub. https://github.com/SunXQlab/PROB?tab=readme-ov-file#functions
 
