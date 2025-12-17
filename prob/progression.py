@@ -2,6 +2,30 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 
 def knnsearch(Q, R=None, K=1):
+    """
+    Perform k-nearest neighbor search using Euclidean distance.
+
+    Parameters
+    ----------
+    Q : numpy.ndarray, shape (n_query, n_features)
+        Query data points.
+
+    R : numpy.ndarray, shape (n_reference, n_features), optional
+        Reference data points. If None, R is set equal to Q and self-matches are excluded.
+
+    K : int, optional (default=1)
+        Number of nearest neighbors to return.
+
+    Returns
+    -------
+    idx : numpy.ndarray, shape (n_query, K)
+        Indices of the K nearest neighbors in R for each query point.
+
+    D : numpy.ndarray, shape (n_query, K)
+        Euclidean distances to the K nearest neighbors.
+        
+    """
+    
     if R is None:
         R = Q
         fident = True
@@ -24,6 +48,30 @@ def knnsearch(Q, R=None, K=1):
     return idx, D
 
 def T_loc(data, nsig, W):
+    """
+    Construct a locally scaled diffusion transition matrix.
+    
+    Parameters
+    ----------
+    data : numpy.ndarray, shape (n_samples, n_features)
+        Input data matrix (e.g., gene expression across samples).
+
+    nsig : int
+        Number of nearest neighbors used to estimate local scale (sigma).
+
+    W : numpy.ndarray, shape (n_samples, n_samples)
+        Weight matrix encoding sample similarity or dissimilarity
+        (e.g., based on Braak stage differences).
+
+    Returns
+    -------
+    T : numpy.ndarray, shape (n_samples, n_samples)
+        Symmetrically normalized diffusion transition matrix.
+
+    phi0 : numpy.ndarray, shape (n_samples,)
+        First (trivial) diffusion eigenvector used for DPT normalization.
+    """
+    
     n = data.shape[0]
     d2 = squareform(pdist(data, metric='euclidean') ** 2)
     idx, dists = knnsearch(data, data, K=nsig)
@@ -42,6 +90,10 @@ def T_loc(data, nsig, W):
     return T, phi0
 
 def dpt_input(T, phi0):
+    """
+    Compute the diffusion pseudotime (DPT) matrix.
+    """
+
     n = T.shape[0]
     I = np.eye(n)
     phi0_outer = np.outer(phi0, phi0)
@@ -49,6 +101,9 @@ def dpt_input(T, phi0):
     return M
 
 def dpt_to_root(M, root):
+    """
+    Compute diffusion pseudotime distances from a specified root sample.
+    """
     n = M.shape[0]
     dpt = np.zeros(n)
     for x in range(n):
@@ -56,16 +111,51 @@ def dpt_to_root(M, root):
     return dpt
 
 def gausswin(N, w=2.5):
+    """
+    Generate a Gaussian smoothing window
+    """
     n = np.arange(N)
     return np.exp(-0.5 * (w / N * (2 * n - (N - 1))) ** 2)
 
 def ksmooth(vector, windowWidth):
+    """
+    Smooth a one-dimensional signal using Gaussian kernel smoothing.
+    """
     windowWidth = max(windowWidth, 3)
     gaussFilter = gausswin(windowWidth)
     gaussFilter = gaussFilter / np.sum(gaussFilter)
     return np.convolve(vector, gaussFilter, mode='same')
 
 def Progression_Inference(X_stage):
+    """
+    This function computes a pseudotemporal ordering of samples from cross-sectional transcriptomic data using 
+    a diffusion-based random walk, incorporating clinical stage information to guide progression.
+
+    Parameters
+    ----------
+    X_stage : numpy.ndarray, shape (n_genes + 1, n_samples)
+        Input matrix where:
+        - Rows 0:(n_genes) correspond to gene expression values
+        - The final row corresponds to clinical stage (e.g., Braak stage)
+
+    Returns
+    -------
+    Data_ordered : numpy.ndarray, shape (n_genes, n_samples)
+        Gene expression matrix reordered and smoothed along inferred pseudotime.
+
+    PPD : numpy.ndarray, shape (n_samples,)
+        Pseudotemporal Progression Distance for each sample.
+
+    TimeSampled : numpy.ndarray, shape (n_samples,)
+        Uniformly sampled pseudotime values in the range [0, 1].
+
+    Notes
+    -----
+    - Diffusion distances are computed using a locally scaled kernel weighted by clinical stage differences.
+    - The root sample is selected from the earliest disease stage.
+    - Gene expression trajectories are smoothed along pseudotime to reduce noise.
+    - This implementation follows the PROB framework described in Sun et al. (2021).
+    """
     R = X_stage.shape
     data = X_stage[:-1, :].T
     grade = X_stage[-1, :]
