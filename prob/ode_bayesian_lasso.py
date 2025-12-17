@@ -3,6 +3,53 @@ from sklearn.linear_model import BayesianRidge
 from scipy import stats
 
 def ODE_BayesianLasso(Data_ordered, TimeSampled, verbose=True):
+    """
+    This function implements the core PROB gene regulatory network (GRN) inference step. 
+    Gene expression dynamics are modeled using a system of ordinary differential equations (ODEs), 
+    where the time derivative of each gene is expressed as a linear combination
+    of interaction terms between genes. Bayesian Ridge regression with sparsity-inducing priors is 
+    used to infer regulatory strengths and posterior confidence intervals.
+
+    Parameters
+    ----------
+    Data_ordered : numpy.ndarray, shape (n_genes, n_samples)
+        Gene expression matrix ordered by inferred pseudotime (PPD).
+        Rows correspond to genes and columns correspond to samples sorted along the latent disease progression.
+
+    TimeSampled : numpy.ndarray, shape (n_samples,)
+        Pseudotime values associated with each sample.
+        These are normalized internally to the range [0, 1] and used to approximate time derivatives.
+
+    verbose : bool, optional (default=True)
+        If True, print progress messages during GRN inference.
+
+    Returns
+    -------
+    Para_Post_pdf : dict
+        Dictionary containing fitted Bayesian regression models for each target gene.
+        For each gene index i:
+            Para_Post_pdf[i]['model'] : sklearn.linear_model.BayesianRidge
+                Trained Bayesian regression model.
+            Para_Post_pdf[i]['coef'] : numpy.ndarray
+                Estimated regulatory coefficients for all source genes (excluding self-regulation).
+    
+    S : numpy.ndarray, shape (n_genes, n_genes)
+        Edge presence probability matrix.
+        Entry S[i, j] represents the posterior probability that gene j regulates gene i, estimated from confidence intervals across multiple significance levels.
+    
+    AM : numpy.ndarray, shape (n_genes, n_genes)
+        Adjacency matrix of the inferred gene regulatory network.
+        Entry AM[i, j] is the estimated regulatory coefficient from gene j to gene i if the posterior confidence exceeds the specified threshold (P > 0.75); otherwise, the entry is zero.
+
+    Notes
+    -----
+    - Time derivatives are approximated using finite differences of pseudotime-ordered gene expression.
+    - For each target gene i, the model includes interaction terms of the form x_j * x_i for all source genes j ≠ i, consistent with the PROB formulation.
+    - Confidence intervals are computed across multiple alpha levels (0.01–1.0), and edge presence probabilities are derived from whether intervals exclude zero.
+    - Self-regulatory edges are excluded by construction.
+    - The confidence threshold (P > 0.75) was chosen to yield a sparse, interpretable network and can be adjusted.
+    """
+    
     if verbose:
         print('Step 2: GRN Inference')
     x = Data_ordered.copy()
