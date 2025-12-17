@@ -15,6 +15,61 @@ def analyze_and_plot_results(
     prob_input_normalized,
     outdir="results"
 ):
+    """
+    Analyze PROB outputs and generate summary statistics and publication-ready figures.
+    
+    Parameters
+    ----------
+    genes_of_interest : list of str
+        List of gene symbols included in the GRN inference.
+        The order must correspond to the rows and columns of `AM`, `S`, and the rows of `Data_ordered`.
+
+    AM : numpy.ndarray, shape (n_genes, n_genes)
+        Inferred adjacency matrix from the Bayesian Lasso ODE model.
+        Entry AM[i, j] represents the regulatory effect of gene j (source) on gene i (target). Positive values indicate activation and negative values indicate inhibition.
+
+    S : numpy.ndarray, shape (n_genes, n_genes)
+        Presence probability matrix for regulatory edges.
+        Entry S[i, j] gives the posterior probability that a regulatory interaction exists from gene j to gene i.
+
+    Data_ordered : numpy.ndarray, shape (n_genes, n_samples)
+        Gene expression matrix ordered by inferred pseudotime (PPD).
+        Each row corresponds to a gene and each column to a sample.
+
+    PPD : numpy.ndarray, shape (n_samples,)
+        Pseudotemporal Progression Distance inferred by PROB.
+        Represents the latent disease progression ordering of samples.
+
+    prob_input_normalized : numpy.ndarray, shape (n_features, n_samples)
+        Normalized input data matrix used by PROB.
+        The last row is assumed to contain clinical stage information (e.g., Braak stage) for each sample.
+
+    outdir : str, optional (default="results")
+        Output directory where all figures and summary files will be saved.
+        The directory is created if it does not exist.
+
+    Outputs
+    -------
+    Files written to `outdir`:
+        - gene_regulatory_network.png
+            Visualization of the inferred directed GRN with activation (green) and inhibition (red) edges.
+        - ppd_vs_stage.png
+            Distribution of PPD values and their relationship to clinical stage.
+        - gene_expression_heatmap.png
+            Heatmap showing gene expression dynamics along pseudotime.
+        - adjacency_matrix_and_presence_probability.png
+            Heatmaps of the adjacency matrix (AM) and edge confidence matrix (S).
+        - summary.txt
+            Text summary including network statistics and correlation between PPD and clinical stage.
+
+    Notes
+    -----
+    - The function uses a non-interactive Matplotlib backend ("Agg") to ensure
+      compatibility with headless environments.
+    - Strong regulatory edges (|weight| > 10) are labeled in the network plot.
+    - Network layout is deterministic due to a fixed random seed.
+
+    """
     os.makedirs(outdir, exist_ok=True)
     
     # Build directed graph
