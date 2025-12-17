@@ -48,6 +48,7 @@ def ODE_BayesianLasso(Data_ordered, TimeSampled, verbose=True):
     - Confidence intervals are computed across multiple alpha levels (0.01–1.0), and edge presence probabilities are derived from whether intervals exclude zero.
     - Self-regulatory edges are excluded by construction.
     - The confidence threshold (P > 0.75) was chosen to yield a sparse, interpretable network and can be adjusted.
+    - This implementation follows the PROB framework described in Sun et al. (2021).
     """
     
     if verbose:
