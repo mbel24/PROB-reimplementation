@@ -16,7 +16,7 @@ Alzheimer’s disease (AD) is a progressive neurodegenerative disorder. PROB add
 All code, scripts, and processed data required to reproduce the analyses and figures are included.
 
 ## Usage Instructions
-Steps to produce the results from the Alzheimer's dataset. All steps assume you are starting from a fresh clone of the repository, and it must be noted that all 
+Steps to produce the results from the Alzheimer's dataset. All steps assume you are starting from a fresh clone of the repository, and it must be noted that the dataset will automatically download when running the pipeline.
 
 ### 1. Clone the repository 
 Open a terminal or PowerShell, navigate to your working folder, and clone the repo:
