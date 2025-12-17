@@ -4,6 +4,35 @@ from sklearn.preprocessing import StandardScaler
 import GEOparse
 
 def load_GSE48350(dest_dir="./data"):
+    """
+    Download and preprocess the GSE48350 Alzheimer’s disease transcriptomic dataset (GSE48350 microarray dataset from the Gene Expression).
+
+    Parameters
+    ----------
+    dest_dir : str, optional (default="./data")
+        Directory where GEO files and annotations will be downloaded and cached.
+
+    Returns
+    -------
+    input_df : pandas.DataFrame
+        Gene-level expression matrix with samples as columns.
+        Rows correspond to gene symbols, with an additional final row:
+            - 'braak stage' : numerical Braak stage for each sample
+        Shape:
+            (n_genes + 1, n_samples)
+
+    Notes
+    -----
+    - Probe-level expression values are collapsed to gene-level expression by averaging probes mapping to the same gene symbol.
+    - Braak stages are parsed from sample metadata and converted from Roman numerals (I–VI) to integers (1–6). Missing or unknown stages are set to 0.
+    - The returned DataFrame is structured to be directly compatible with downstream PROB preprocessing steps.
+
+    Raises
+    ------
+    ValueError
+        If Braak stage information cannot be found in the GEO metadata.
+    """
+    
     print("📥 Downloading GSE48350 from GEO...")
     gse = GEOparse.get_GEO("GSE48350", destdir="./data", how="full")
     
@@ -49,7 +78,33 @@ def load_GSE48350(dest_dir="./data"):
     return input_df
 
 def select_genes(input_df, candidate_genes=None, top_n=20):
-    #SELECT GENES OF INTEREST & BUILD prob_input
+    """
+    This function selects a subset of genes for downstream PROB modeling. If a list of candidate genes is provided, the function selects the top
+    `top_n` genes with the highest expression variance across samples.The Braak stage row is appended to the final input matrix.
+
+    Parameters
+    ----------
+    input_df : pandas.DataFrame
+        Gene-level expression DataFrame with samples as columns and genes as rows.
+        Must include a row labeled 'braak stage'.
+
+    candidate_genes : list of str, optional (default=None)
+        List of candidate gene symbols to consider.
+        If None, a predefined list of Alzheimer’s disease–related genes (GWAS hits, pathway genes, and known risk factors) is used.
+
+    top_n : int, optional (default=20)
+        Number of genes to select based on highest variance.
+        If fewer than `top_n` candidate genes are present in the dataset, all available genes are selected.
+
+    Returns
+    -------
+    prob_input : numpy.ndarray
+        PROB input matrix of shape (n_genes + 1, n_samples), where the final row corresponds to Braak stage.
+
+    genes_of_interest : list of str
+        List of selected gene symbols used for downstream analysis.
+    """
+
     if candidate_genes is None:
         candidate_genes = [
             'APOE', 'APP', 'PSEN1', 'PSEN2', 'MAPT',  # Core AD genes
@@ -86,7 +141,30 @@ def select_genes(input_df, candidate_genes=None, top_n=20):
     return prob_input, genes_of_interest
 
 def filter_and_normalize(prob_input, stage_min=3):
-    """Filter samples by Braak stage and normalize gene expression."""
+    """
+    This function removes samples below a specified Braak stage threshold and applies z-score normalization to gene expression values while preserving clinical stage information.
+
+    Parameters
+    ----------
+    prob_input : numpy.ndarray
+        Input matrix of shape (n_genes + 1, n_samples), where the final row corresponds to Braak stage and all preceding rows correspond to genes.
+
+    stage_min : int, optional (default=3)
+        Minimum Braak stage required for a sample to be retained.
+        Samples with Braak stage < stage_min are removed.
+
+    Returns
+    -------
+    prob_input : numpy.ndarray
+        Filtered and normalized PROB input matrix of shape (n_genes + 1, n_filtered_samples).
+
+    Notes
+    -----
+    - Gene expression values are standardized using z-score normalization (mean = 0, standard deviation = 1) across samples.
+    - The Braak stage row is excluded from normalization.
+    - This preprocessing step ensures comparable gene scales for pseudotime inference and GRN modeling.
+    """
+    
     stage_mask = prob_input[-1, :] >= stage_min
     prob_input = prob_input[:, stage_mask]
 
