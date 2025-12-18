@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.linear_model import BayesianRidge
 from scipy import stats
 
-def ODE_BayesianLasso(Data_ordered, TimeSampled, verbose=True):
+def ODE_Bayesian(Data_ordered, TimeSampled, verbose=True):
     """
     This function implements the core PROB gene regulatory network (GRN) inference step. 
     Gene expression dynamics are modeled using a system of ordinary differential equations (ODEs), 
