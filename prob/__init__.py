@@ -10,4 +10,4 @@ Modules:
 from .progression import Progression_Inference
 from .ode_bayesian import ODE_Bayesian
 from .preprocessing import load_GSE48350, select_genes, filter_and_normalize
-from .analysis_and_plots import analyze_and_plot_results
+from .analysis_and_plots import analyze_and_plot_results, plot_real_data_summary, plot_key_gene_trajectories
