@@ -239,6 +239,174 @@ def analyze_and_plot_results(
     plt.tight_layout()
     plt.savefig(f"{outdir}/adjacency_matrix_and_presence_probability.png", dpi=300)
     plt.close()
+
+def plot_real_data_summary(
+    PPD_real,
+    AM_real,
+    genes_of_interest,
+    outdir="results"
+):
+    """
+    Generate a 2x2 summary figure for real data:
+    - PPD distribution
+    - Ordered PPD values
+    - Real GRN adjacency matrix
+    - Out-degree distribution of regulators
+    """
+    os.makedirs(outdir, exist_ok=True)
+
+    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+
+    # --------------------------------------------------
+    # Histogram of PPD
+    ax = axes[0, 0]
+    ax.hist(PPD_real, bins=15, alpha=0.7, edgecolor='black', color='coral')
+    ax.set_xlabel('PPD', fontsize=12)
+    ax.set_ylabel('Frequency', fontsize=12)
+    ax.set_title('PPD Distribution (Real Data)', fontsize=13)
+    ax.grid(True, alpha=0.3)
+
+    # --------------------------------------------------
+    # Ordered PPD values
+    ax = axes[0, 1]
+    rank_order = np.argsort(PPD_real)
+    ax.scatter(
+        np.arange(len(PPD_real)),
+        PPD_real[rank_order],
+        s=50,
+        color='steelblue'
+    )
+    ax.set_xlabel('Sample Rank (Ordered by PPD)', fontsize=12)
+    ax.set_ylabel('PPD', fontsize=12)
+    ax.set_title('Ordered PPD Values (Real Data)', fontsize=13)
+    ax.grid(True, alpha=0.3)
+
+    # --------------------------------------------------
+    # Real GRN heatmap
+    ax = axes[1, 0]
+    vmax_real = np.max(np.abs(AM_real))
+    im = ax.imshow(
+        AM_real,
+        cmap='coolwarm',
+        vmin=-vmax_real,
+        vmax=vmax_real
+    )
+    ax.set_title(
+        f'Real GRN (Bayesian Lasso) — {np.sum(AM_real != 0)} edges',
+        fontsize=13
+    )
+    ax.set_xlabel('Source Gene', fontsize=12)
+    ax.set_ylabel('Target Gene', fontsize=12)
+
+    ax.set_xticks(np.arange(len(genes_of_interest)))
+    ax.set_yticks(np.arange(len(genes_of_interest)))
+    ax.set_xticklabels(genes_of_interest, rotation=45, ha='right', fontsize=8)
+    ax.set_yticklabels(genes_of_interest, fontsize=8)
+
+    plt.colorbar(im, ax=ax)
+
+    # --------------------------------------------------
+    # Out-degree distribution
+    ax = axes[1, 1]
+    out_degrees = np.sum(AM_real != 0, axis=1)
+    bars = ax.bar(
+        np.arange(len(out_degrees)),
+        out_degrees,
+        color='slateblue'
+    )
+
+    ax.set_xlabel('Gene', fontsize=12)
+    ax.set_ylabel('Outgoing Edges', fontsize=12)
+    ax.set_title('GRN Regulator Degree Distribution', fontsize=13)
+    ax.set_xticks(np.arange(len(genes_of_interest)))
+    ax.set_xticklabels(genes_of_interest, rotation=45, ha='right', fontsize=8)
+    ax.grid(True, alpha=0.3, axis='y')
+
+    max_degree = np.max(out_degrees)
+    if max_degree > 0:
+        for bar, deg in zip(bars, out_degrees):
+            if deg == max_degree:
+                bar.set_color('darkred')
+
+    plt.tight_layout()
+    plt.savefig(f"{outdir}/real_data_summary.png", dpi=300)
+    plt.close()
+
+def plot_key_gene_trajectories(
+    genes_of_interest,
+    PPD_real,
+    prob_input,
+    Data_ordered_real,
+    outdir="results"
+):
+    """
+    Plot expression trajectories of key genes along PPD.
+    """
+    os.makedirs(outdir, exist_ok=True)
+
+    fig, axes = plt.subplots(2, 3, figsize=(18, 10))
+    axes = axes.flatten()
+
+    stages = prob_input[-1, :].astype(int)
+    key_genes = ['CLU', 'APOE', 'TREM2', 'TYROBP', 'CD33', 'MS4A6A']
+
+    for idx, gene in enumerate(key_genes):
+        ax = axes[idx]
+        gene_idx = genes_of_interest.index(gene)
+
+        # Scatter: raw expression colored by Braak stage
+        scatter = ax.scatter(
+            PPD_real,
+            prob_input[gene_idx, :],
+            c=stages,
+            cmap='viridis',
+            s=60,
+            alpha=0.6,
+            edgecolors='black',
+            linewidth=0.5
+        )
+
+        # Smoothed trajectory
+        sort_idx = np.argsort(PPD_real)
+        ax.plot(
+            PPD_real[sort_idx],
+            Data_ordered_real[gene_idx, sort_idx],
+            'r-',
+            linewidth=3,
+            label='Smoothed trajectory',
+            alpha=0.8
+        )
+
+        # Linear fit
+        z = np.polyfit(PPD_real, prob_input[gene_idx, :], 1)
+        p = np.poly1d(z)
+        ax.plot(
+            PPD_real[sort_idx],
+            p(PPD_real[sort_idx]),
+            'b--',
+            linewidth=2,
+            label=f'Linear fit (slope={z[0]:.2f})',
+            alpha=0.6
+        )
+
+        ax.set_xlabel('Pseudotemporal Distance (PPD)', fontsize=11)
+        ax.set_ylabel('Normalized Expression', fontsize=11)
+        ax.set_title(
+            f'{gene} Expression Trajectory',
+            fontsize=13,
+            fontweight='bold'
+        )
+        ax.legend(loc='best', fontsize=9)
+        ax.grid(True, alpha=0.3)
+
+        if idx == 2:
+            cbar = plt.colorbar(scatter, ax=ax)
+            cbar.set_label('Braak Stage', fontsize=10)
+
+    plt.tight_layout()
+    plt.savefig(f"{outdir}/key_gene_trajectories.png", dpi=300)
+    plt.close()
+
     
     
     
