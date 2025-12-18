@@ -5,7 +5,7 @@ This repository contains a reimplementation of PROB (Progression-Based Bayesian 
 Alzheimer’s disease (AD) is a progressive neurodegenerative disorder. PROB addresses this challenge by:
 
 - Inferring pseudotemporal ordering of samples (PPD) using a diffusion-based random walk.
-- Inferring a directed gene regulatory network via ODE models with Bayesian Lasso regression.
+- Inferring a directed gene regulatory network via ODE models with Bayesian regression.
 
 **Key findings:**
 
@@ -54,7 +54,7 @@ This executes all steps:
 
 - Load and preprocess data.
 - Compute progression inference (PPD) for all samples.
-- Infer the gene regulatory network using Bayesian Lasso regression.
+- Infer the gene regulatory network using Bayesian regression.
 - Generate summary statistics and figures.
     
 ### 5. View results
@@ -90,9 +90,9 @@ All output is saved in the results/ folder (created automatically):
     - Diffusion-based random walk
     - Compute progression pseudotime distances (PPD)
     - Evaluate correlation with Braak stage
-3. Gene Regulatory Network Inference (prob/ode_bayesian_lasso.py)
+3. Gene Regulatory Network Inference (prob/ode_bayesian.py)
     - ODE-based modeling
-    - Bayesian Lasso regression for sparsity
+    - Bayesian regression for sparsity
     - Extract statistically significant regulatory interactions
 4. Analysis and Visualization (prob/analyze_and_plot_results.py + notebooks)
     - Plot trajectories, networks, and hub genes
