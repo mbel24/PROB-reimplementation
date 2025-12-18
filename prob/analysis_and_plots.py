@@ -25,7 +25,7 @@ def analyze_and_plot_results(
         The order must correspond to the rows and columns of `AM`, `S`, and the rows of `Data_ordered`.
 
     AM : numpy.ndarray, shape (n_genes, n_genes)
-        Inferred adjacency matrix from the Bayesian Lasso ODE model.
+        Inferred adjacency matrix from the Bayesian ODE model.
         Entry AM[i, j] represents the regulatory effect of gene j (source) on gene i (target). Positive values indicate activation and negative values indicate inhibition.
 
     S : numpy.ndarray, shape (n_genes, n_genes)
