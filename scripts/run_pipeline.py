@@ -4,7 +4,7 @@ run_pipeline.py
 End-to-end PROB reimplementation pipeline:
 1. Download & preprocess AD microarray data (GSE48350)
 2. Infer disease progression pseudotime (PPD)
-3. Infer gene regulatory network using ODE + Bayesian Lasso
+3. Infer gene regulatory network using ODE + Bayesian regression
 """
 import sys
 import os
@@ -15,7 +15,7 @@ import pandas as pd
 
 from preprocessing import (load_GSE48350, select_genes, filter_and_normalize)
 from progression import Progression_Inference
-from ode_bayesian_lasso import ODE_BayesianLasso
+from ode_bayesian import ODE_Bayesian
 from analysis_and_plots import analyze_and_plot_results
 
 def main():
@@ -59,7 +59,7 @@ def main():
     # --------------------------------------------------
     print("Step 2: Gene regulatory network inference\n")
 
-    Para_Post_pdf, S, AM = ODE_BayesianLasso(
+    Para_Post_pdf, S, AM = ODE_Bayesian(
         Data_ordered,
         TimeSampled,
         verbose=True
