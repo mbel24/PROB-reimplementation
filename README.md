@@ -70,6 +70,8 @@ All output is saved in the results/ folder (created automatically):
     - ppd_vs_stage.png — PPD distribution and clinical stage
     - gene_expression_heatmap.png — gene expression along pseudotime
     - adjacency_matrix_and_presence_probability.png — adjacency & confidence matrices
+    - real_data_summary.png - summary figure including: PPD histogram, ordered PPD values,  GRN heatmap, and out-degree distribution of regulators.
+    - key_gene_trajectories.png - expression trajectories of key genes along PPD. Braak stage is represented by color.
  
 
 ### 6. Notes for reproducibility
