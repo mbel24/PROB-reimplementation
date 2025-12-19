@@ -49,9 +49,7 @@ pip install -r requirements.txt
 
 The pipeline is run using the `run_pipeline.py` script located in the `scripts/` folder:
 
-```Python
-scripts/run_pipeline.py
-```
+`python scripts/run_pipeline.py`
 
 This executes all steps:
 
