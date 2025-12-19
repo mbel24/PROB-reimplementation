@@ -99,11 +99,11 @@ def main():
     plot_real_data_summary(
         PPD_real=PPD,
         AM_real=AM,
-        genes_of_interest=genes_names,
+        genes_of_interest=gene_names,
         outdir="results"
     )
     plot_key_gene_trajectories(
-        genes_of_interest=genes_names,
+        genes_of_interest=gene_names,
         PPD_real=PPD,
         prob_input=prob_input,
         Data_ordered_real=Data_ordered,
