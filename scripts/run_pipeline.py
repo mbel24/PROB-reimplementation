@@ -16,7 +16,7 @@ import pandas as pd
 from preprocessing import (load_GSE48350, select_genes, filter_and_normalize)
 from progression import Progression_Inference
 from ode_bayesian import ODE_Bayesian
-from analysis_and_plots import analyze_and_plot_results
+from analysis_and_plots import (analyze_and_plot_results, plot_real_data_summary, plot_key_gene_trajectories)
 
 def main():
 
@@ -96,6 +96,21 @@ def main():
         prob_input_normalized=prob_input,
         outdir="results"
     )
+    plot_real_data_summary(
+        PPD_real=PPD,
+        AM_real=AM,
+        genes_of_interest=genes_names,
+        outdir="results"
+    )
+    plot_key_gene_trajectories(
+        genes_of_interest=genes_names,
+        PPD_real=PPD,
+        prob_input=prob_input,
+        Data_ordered_real=Data_ordered,
+        outdir="results"
+    )
+
+
 if __name__ == "__main__":
     main()
 
