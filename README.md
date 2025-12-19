@@ -41,8 +41,9 @@ Linux/maxOS:
 ### 3. Install dependencies
 
 This installs all necessary Python packages
-
-`pip install -r requirements.txt`
+```Bash
+pip install -r requirements.txt
+```
 
 ### 4. Run the pipeline:
 
